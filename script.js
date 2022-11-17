@@ -31,3 +31,8 @@ function operate(operator, operand, operand1) {
         return divide(operand, operand1);
     }
 }
+
+function display(operator, operand, operand1) {
+    let displayValue = operate(operator, operand, operand1);
+    return displayValue;
+}
