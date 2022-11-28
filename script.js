@@ -54,6 +54,9 @@ function handler(){
 
 function display(result) {
     const answerDisplay = document.querySelector('.numericalDisplay');
+    if (result === Infinity) {
+        result = 'ugh';
+    }
     answerDisplay.innerHTML = `${result}`;
 }
 
