@@ -7,30 +7,34 @@ let result;
 function handler(){
     let operationOngoing = true;
     while (operationOngoing){
-
         //collect 1st num
-        inputArray.forEach(e => 
-            if (!isNaN(e)){
-                num1 += e;
-                inputArray.splice(e, 1);}
-            else {
+        for (let i = 0; i < inputArray.length; i++) {
+            //not catching operators
+            console.log(Number.isInteger(parseInt(inputArray[0])));
+            if (!Number.isInteger(parseInt(inputArray[0]))){
                 break;
-            })
-           
-        //collect 1st operator
+            }
+            else {
+                num1 += inputArray[0];
+                inputArray.splice(0, 1);
+            }};
+        console.log(inputArray, num1, num2, operator);
+        //collect 1st operator and remove from array
         operator += inputArray[0];
+        inputArray.splice(0,1)
 
         //collect 2nd num
-        inputArray.forEach(e =>
-            if(!isNaN(e)){
-                num2 += e;
-                inputArray.splice(e, 1);}
-            else {
+        for (let j = 0; j < inputArray.length; j++) {
+            if (!Number.isInteger(parseInt(inputArray[0]))){
                 break;
-            })
+            }
+            else {
+                num2 += inputArray[0];
+                inputArray.splice(0, 1);
+            }};
 
         //check 2nd operator. if equals, set to false
-        if (inputArray[0] === '=') {
+        if (inputArray[0] === 'Equals') {
             operationOngoing = false;
             //return result of (1st num, 1st operator, 2nd num)  
             result = operate(operator, parseInt(num1), parseInt(num2));
@@ -67,7 +71,6 @@ function divide(dividend, divisor) {
 
 //coordinate operator-specific functions
 function operate(operator, operand, operand1) {
-    console.log(operator, operand, operand1);
     if (operator === 'Add') {
         return add(operand, operand1);}
 
@@ -83,11 +86,17 @@ function operate(operator, operand, operand1) {
 
 //add all button clicks (except clear) to inputArray
 function makeButtonListeners(){
-    const buttons = document.querySelectorAll('.number, .operator, .equals');
-    buttons.addEventListener('click', (e) => {
-        inputArray.push(e.target.innerHTML);
+    const buttons = document.querySelectorAll('.number, .operator');
+    const equalsBtn = document.querySelector('.equals');
+    buttons.forEach( (btn) => {
+        btn.addEventListener('click', (e) => {
+            inputArray.push(e.target.innerHTML);
+        });
+    });  
+    equalsBtn.addEventListener( 'click', (e) => {
+            inputArray.push(e.target.innerHTML);
+            handler();
     });
 }
 
 makeButtonListeners();
-handler();
