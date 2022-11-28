@@ -1,95 +1,93 @@
-let numSelectionStr = '';
-let operatorSelectionStr = '';
-let firstNum = '';
-let secondNum = '';
+const inputArray = [];
+let num1 = '';
+let num2 = '';
+let operator = '';
+let result;
 
-function add(addend,addend1) {
-    return (display(addend, 'plus', addend1, addend + addend1));
+function handler(){
+    let operationOngoing = true;
+    while (operationOngoing){
+
+        //collect 1st num
+        inputArray.forEach(e => 
+            if (!isNaN(e)){
+                num1 += e;
+                inputArray.splice(e, 1);}
+            else {
+                break;
+            })
+           
+        //collect 1st operator
+        operator += inputArray[0];
+
+        //collect 2nd num
+        inputArray.forEach(e =>
+            if(!isNaN(e)){
+                num2 += e;
+                inputArray.splice(e, 1);}
+            else {
+                break;
+            })
+
+        //check 2nd operator. if equals, set to false
+        if (inputArray[0] === '=') {
+            operationOngoing = false;
+            //return result of (1st num, 1st operator, 2nd num)  
+            result = operate(operator, parseInt(num1), parseInt(num2));
+            return display(result);
+        }
+
+        //pass calculated value back as 1st num
+        else {
+            inputArray.unshift(
+                operate(operator, parseInt(num1), parseInt(num2)));
+            //reset 
+            num1 = num2 = operator = '';
+        }
+    }
 }
+
+function display(result) {
+    const answerDisplay = document.querySelector('.numericalDisplay');
+    answerDisplay.innerHTML = `${result}`;
+}
+
+//operator-specific functions
+function add(addend,addend1) {
+    return (addend + addend1);}
 
 function subtract(minuend, subtrahend) {
-    return (display(minuend, 'minus', subtrahend, minuend - subtrahend));
-}
+    return (minuend - subtrahend);}
 
 function multiply(multipicand, multiplier) {
-    return (display(multipicand, 'times', multiplier, multipicand * multiplier));
-}
+    return (multipicand * multiplier);}
 
 function divide(dividend, divisor) {
-    return( display(dividend, 'divided by', divisor, dividend / divisor));
-}
+    return( dividend / divisor);}
 
+//coordinate operator-specific functions
 function operate(operator, operand, operand1) {
     console.log(operator, operand, operand1);
     if (operator === 'Add') {
-        return add(operand, operand1);
-    }
+        return add(operand, operand1);}
 
     else if (operator === 'Subtract') {
-        return subtract(operand, operand1);
-    }
+        return subtract(operand, operand1);}
 
     else if (operator === 'Multiply') {
-        return multiply(operand, operand1);
-    }
+        return multiply(operand, operand1);}
 
     else {
-        return divide(operand, operand1);
-    }
+        return divide(operand, operand1);}
 }
 
-function display(operand, operator, operand1, displayValue) {
-    console.log(operand, operator, operand1, displayValue);
-    const display = document.querySelector('.numericalDisplay');
-    display.innerHTML = `${operand} ${operator} ${operand1} equals ${displayValue}`;
-    console.log('first val:', firstNum, operatorSelectionStr,
- 'second val: ', secondNum);
-}
-
-function makeNumberButtonListeners() {
-    const numButtons = document.querySelectorAll('.number');
-    numButtons.forEach( (btn) => {
-        btn.addEventListener('click', (e) => {
-            numSelectionStr += e.target.innerHTML;
-        });
-    });
-    }
-
-function makeOperatorButtonListeners() {
-    const operatorButtons = document.querySelectorAll('.operator');
-    operatorButtons.forEach( (btn) => {
-        btn.addEventListener('click', (e) => {
-            operatorSelectionStr += e.target.innerHTML;
-            getFirstNum();
-        });
+//add all button clicks (except clear) to inputArray
+function makeButtonListeners(){
+    const buttons = document.querySelectorAll('.number, .operator, .equals');
+    buttons.addEventListener('click', (e) => {
+        inputArray.push(e.target.innerHTML);
     });
 }
 
-function getFirstNum() {
-    firstNum = numSelectionStr;
-    numSelectionStr = '';
-}
-
-function makeEqualsButtonListener() {
-    const equalsButton = document.querySelector('.equals');
-    equalsButton.addEventListener('click', (e) => {
-        getSecondNum();
-    });
-}
-
-
-function getSecondNum() {
-    console.log(81);
-    secondNum = numSelectionStr;
-    numSelectionStr = '';
-    console.log(firstNum, secondNum);
-    return operate(operatorSelectionStr, parseInt(firstNum), parseInt(secondNum));
-}
-
-function callListenerFuncs() {
-    makeNumberButtonListeners();
-    makeOperatorButtonListeners();
-    makeEqualsButtonListener();
-};
-
-callListenerFuncs();
+makeButtonListeners();
+handler();
