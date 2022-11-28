@@ -36,6 +36,7 @@ function handler(){
         //check 2nd operator. if equals, set to false
         if (inputArray[0] === 'Equals') {
             operationOngoing = false;
+            inputArray.splice(0, 1);
             //return result of (1st num, 1st operator, 2nd num)  
             result = operate(operator, parseInt(num1), parseInt(num2));
             return display(result);
@@ -88,15 +89,20 @@ function operate(operator, operand, operand1) {
 function makeButtonListeners(){
     const buttons = document.querySelectorAll('.number, .operator');
     const equalsBtn = document.querySelector('.equals');
+    const clearBtn = document.querySelector('.clear');
     buttons.forEach( (btn) => {
         btn.addEventListener('click', (e) => {
             inputArray.push(e.target.innerHTML);
         });
     });  
     equalsBtn.addEventListener( 'click', (e) => {
-            inputArray.push(e.target.innerHTML);
-            handler();
+        inputArray.push(e.target.innerHTML);
+        handler();
     });
+    clearBtn.addEventListener( 'click', () => {
+        num1 = num2 = operator = result = '';
+        display(result);
+});
 }
 
 makeButtonListeners();
